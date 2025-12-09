@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smooth Swapping Squares</title>
+<style>
+  :root {
+    --size: 130vh;
+    --offset: calc(var(--size) * 0.71);
+
+    --dark-x: calc(-1 * var(--offset));
+    --dark-y: 0vh;
+
+    --light-x: calc(-1 * var(--offset) - (var(--size) * 0.12));
+    --light-y: calc(-1 * (var(--size) * 0.015));
+  }
+
+  body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #dff1ff;
+    transition: background-color 0.6s ease;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  }
+
+  /* LOGO TOP RIGHT */
+  #logo-bg {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 180px;
+    height: 180px;
+    background-color: #003f8a;
+    border-radius: 20px;
+    transition: 0.6s;
+    z-index: 30;
+    transform: rotate(26deg);
+  }
+
+  #logo-img {
+    position: absolute;
+    top: 35px;
+    right: 35px;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    z-index: 31;
+    transform: rotate(26deg);
+  }
+
+  /* LOGO AU CENTRE */
+  #lycee-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 650px;
+    opacity: 0.75;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* SQUARES */
+  .square {
+    width: var(--size);
+    height: var(--size);
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%) rotate(45deg);
+    cursor: pointer;
+    transition: transform 0.6s cubic-bezier(0.22,1,0.36,1), box-shadow 0.5s ease;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.35);
+  }
+
+  .square-text {
+    position: absolute;
+    left: 69%;
+    top: 2%;
+    transform: rotate(-45deg);
+    width: 50%;
+    font-size: 4.2vh;
+    font-weight: 800;
+    color: white;
+    line-height: 1.2;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.35);
+    pointer-events: none;
+  }
+
+  .dark { background: #003f8a; }
+  .light { background: rgb(49,188,223); }
+
+  .to-dark {
+    transform: translate(var(--dark-x),var(--dark-y)) translateY(-50%) rotate(45deg);
+  }
+  .to-light {
+    transform: translate(var(--light-x),var(--light-y)) translateY(-50%) rotate(45deg);
+  }
+
+  .front { z-index: 20; }
+  .back  { z-index: 1; }
+
+  /* TEXT BOX STYLE */
+  #center-text,
+  #stage-text,
+  #dark-info,
+  #thanks-text,
+  #press-space {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    padding: 18px 22px;
+    line-height: 1.35;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(6px);
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.20);
+    color: white;
+    font-size: 2.9vh;
+    font-weight: 700;
+    pointer-events: none;
+  }
+
+  #center-text {
+    position: absolute;
+    top: 4%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 48%;
+    text-align: center;
+    z-index: 25;
+    display: none;
+  }
+
+  #stage-text {
+    position: absolute;
+    top: 70%;
+    left: 70%;
+    transform: translateX(-50%);
+    width: 48%;
+    text-align: center;
+    z-index: 25;
+    opacity: 0;
+    display: none;
+    transition: opacity 0.35s ease;
+  }
+
+  #dark-info {
+    position: absolute;
+    top: 2%;
+    left: 49%;
+    transform: translateX(-50%);
+    width: 50%;
+    text-align: center;
+    z-index: 25;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+
+  #thanks-text {
+    position: absolute;
+    bottom: 6%;
+    left: 50%;
+    width: 38%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 26;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+
+  /* NEW — "Press SPACE" text */
+  #press-space {
+    position: absolute;
+    top: 50%;
+    right: 4%;
+    transform: translateY(-50%);
+    width: 10%;
+    text-align: center;
+    font-size: 2.4vh;
+    background: rgba(0,0,0,0.30);
+    color: white;
+    opacity: 0.50;
+    z-index: 40;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.50);
+  }
+
+</style>
+</head>
+<body>
+
+<div id="logo-bg"></div>
+<img id="logo-img" src="logo.png.png" alt="logo">
+
+<img id="lycee-logo" src="logo-lycee-pierre-emile-martin.png" alt="Logo lycée">
+
+<div id="center-text">
+  Je suis actuellement en bac pro CIEL<br>
+  au lycée Pierre-Émile Martin à Bourges.<br>
+  Je compte faire un BTS en cybersécurité<br>
+  une fois mon bac obtenu.
+</div>
+
+<div id="stage-text">
+  Je suis en recherche de stage et je<br>
+  voudrais savoir si vous seriez intéressé<br>
+  par ma candidature. Un entretien en personne<br>
+  sera possible dès que j'aurai votre réponse.
+</div>
+
+<div id="light" class="square light to-light front">
+  <div id="light-text" class="square-text">
+    Je m'appelle claude<br>
+    HUE et j'ai 15 ans!
+  </div>
+</div>
+
+<div id="dark" class="square dark to-dark back">
+  <div id="dark-text" class="square-text">
+    Je voudrais plus<br>
+    tard travailler<br>
+    dans le domaine de<br>
+    l'informatique!
+  </div>
+</div>
+
+<div id="dark-info">
+  Mes principaux défauts sont d’être bavard<br>
+  et parfois un peu la tête en l’air.<br><br>
+  Mes qualités sont que je suis sociable<br>
+  et travailleur quand le sujet m'intéresse.
+</div>
+
+<div id="thanks-text">
+  Merci pour votre attention,<br>
+  j'espère que l'on se reverra bientôt.<br><br>
+  Je vous souhaite une bonne journée<br>
+  et une bonne continuation.
+</div>
+
+<!-- NEW text: press space -->
+<div id="press-space">
+  Appuyez sur ESPACE
+</div>
+
+<script>
+  const light = document.getElementById("light");
+  const dark = document.getElementById("dark");
+  const logoBg = document.getElementById("logo-bg");
+
+  const lightText = document.getElementById("light-text");
+  const darkText = document.getElementById("dark-text");
+  const centerText = document.getElementById("center-text");
+  const stageText = document.getElementById("stage-text");
+  const darkInfo = document.getElementById("dark-info");
+  const thanksText = document.getElementById("thanks-text");
+
+  let lightOnTop = true;
+
+  centerText.style.display = "block";
+  stageText.style.display = "block";
+  stageText.style.opacity = "1";
+  darkText.style.display = "none";
+
+  function swap() {
+    if (lightOnTop) {
+      light.classList.replace("to-light","to-dark");
+      dark.classList.replace("to-dark","to-light");
+
+      light.classList.replace("front","back");
+      dark.classList.replace("back","front");
+
+      document.body.style.backgroundColor = "#b4d9ff";
+      logoBg.style.backgroundColor = "#1198d6";
+
+      centerText.style.display = "none";
+      stageText.style.opacity = "0";
+      setTimeout(()=> stageText.style.display="none",350);
+
+      darkInfo.style.opacity = "1";
+      thanksText.style.opacity = "1";
+
+      lightText.style.display = "none";
+      darkText.style.display = "block";
+
+    } else {
+      light.classList.replace("to-dark","to-light");
+      dark.classList.replace("to-light","to-dark");
+
+      light.classList.replace("back","front");
+      dark.classList.replace("front","back");
+
+      document.body.style.backgroundColor = "#dff1ff";
+      logoBg.style.backgroundColor = "#003f8a";
+
+      centerText.style.display = "block";
+      stageText.style.display = "block";
+      setTimeout(()=> stageText.style.opacity = "1",10);
+
+      darkInfo.style.opacity = "0";
+      thanksText.style.opacity = "0";
+
+      lightText.style.display = "block";
+      darkText.style.display = "none";
+    }
+
+    lightOnTop = !lightOnTop;
+  }
+
+  light.addEventListener("click", swap);
+  dark.addEventListener("click", swap);
+
+  /* SPACE BAR TRIGGERS ANIMATION */
+  document.addEventListener("keydown", function(e) {
+    if (e.code === "Space") {
+      e.preventDefault();
+      swap();
+    }
+  });
+</script>
+
+</body>
+</html>
